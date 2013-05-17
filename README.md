@@ -1,4 +1,4 @@
-# ODS D Support Class Library
+# ODS D Language Support Class Library
 _Open Design Strategies, LLC_
 Copyright 2013 Open Design Strategies, LLC.
 All rights reserved.
