@@ -5,12 +5,6 @@ struct EnumFlag (E, T)
 {
 public:
 
-	this(E e, T t) {
-		_flags = t;
-		_type = e;
-		_len = E.max;
-	}
-
 	// Numer of native bytes back this EnumFlag
 	//@property const size_t dim() { return (_len + (_bps-1))/_bps; }
 	@property const uint dim() { return _flags.sizeof; }
@@ -26,7 +20,7 @@ public:
 	// Copy/duplicate
 	@property EnumFlag dup() const
 	{
-		EnumFlag!E,T ef;
+		EnumFlag!(E,T) ef;
 		ef._flags = _flags;
 		ef._type = _type;
 		ef._bps = _bps;
@@ -35,12 +29,12 @@ public:
 		return ef;
 	}
 
-	void set(E f) { _flags |= (1<<(T)f); }
-	void clr(E f) { _flags &= ~(1<<(T)f); }
-	void toggle(E f) { _flags ^= (1<<(T)f); }
-	void zero() { _flags &= (T)0; }
+	void set(E f) { _flags |= (1<<cast(T)f); }
+	void clr(E f) { _flags &= ~(1<<cast(T)f); }
+	void toggle(E f) { _flags ^= (1<<cast(T)f); }
+	void zero() { _flags &= cast(T)0; }
 	
-	bool isset(E f) { return (_flags & f); }
+	bool isset(E f) const { return (cast(bool)(_flags & (1<<cast(T)f))); }
 
 	// operator overloading
 	// Uses [idx] to index enum flag bits
@@ -65,11 +59,11 @@ public:
 	int opApply(scope int delegate(ref bool) dg)
 	{
 		int res;
-		for (E e = E.min; i <= E.max; i++)
+		for (E e = E.min; e <= E.max; e++)
 		{
 			bool b = opIndex(e);
 			res = dg(b);
-			this[i] = b;
+			this[e] = b;
 			if (res) break;
 		}
 		return res;
@@ -80,7 +74,7 @@ public:
 protected:
 	T 	_flags;
 	E	_type;
-	size_t _len;
+	size_t _len = E.max;
 	size_t _bps = T.sizeof * 8;
 
 }

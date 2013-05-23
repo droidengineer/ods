@@ -7,6 +7,14 @@ public class SkipListException : Exception
 {
 	enum ExceptionCause { UnknownError, InvariantError, InvalidNext }
 
+	this(string msg, string file = __FILE__, size_t line = __LINE__, Throwable next = null)
+	{
+		super(msg,file,line,next);
+	}
+	this(string msg, Throwable next, string file = __FILE__, size_t line = __LINE__)
+	{
+		super(msg,file,line,next);
+	}
 	this(ExceptionCause c, string s) { _cause = c; this(s); }
 	this(string s) { super(s); }
 
